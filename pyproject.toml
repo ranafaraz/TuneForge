@@ -1,0 +1,65 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tuneforge"
+version = "0.1.0"
+description = "Black-box hyperparameter-optimizer benchmark against known optima: model-based search (TPE/GP-EI) buys sample-efficiency from response-surface structure, multi-fidelity (Hyperband) buys budget-efficiency from fidelity-rank correlation -- each proven by an ablation that collapses it."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Rana Faraz" }]
+keywords = [
+  "hyperparameter-optimization", "bayesian-optimization", "tpe", "hyperband",
+  "successive-halving", "automl", "black-box-optimization", "benchmark",
+]
+classifiers = [
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "License :: OSI Approved :: MIT License",
+  "Intended Audience :: Science/Research",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+# Numpy is the only runtime dependency: every optimizer (random, TPE, a from-scratch
+# Gaussian-process + Expected-Improvement, successive halving and Hyperband) and every
+# response surface is implemented on top of it. No model downloads, no API keys --
+# CI runs the whole benchmark offline against analytic optima.
+dependencies = ["numpy>=1.23"]
+
+[project.optional-dependencies]
+# Optional cross-check backend: re-run TPE and successive-halving with Optuna's own
+# sampler / pruner on the same surfaces to confirm the ranking agrees.
+optuna = ["optuna>=3.0"]
+dev = [
+  "pytest>=7.0",
+  "ruff>=0.1",
+]
+
+[project.scripts]
+tuneforge = "tuneforge.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/ranafaraz/TuneForge"
+Repository = "https://github.com/ranafaraz/TuneForge"
+
+[tool.setuptools.packages.find]
+include = ["tuneforge*", "evals*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "UP", "B"]
+ignore = ["E741"]
+
+[tool.ruff.lint.per-file-ignores]
+# __init__ pins BLAS threads via os.environ *before* importing numpy-backed
+# submodules, so those imports legitimately sit below executable code.
+"tuneforge/__init__.py" = ["E402"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
