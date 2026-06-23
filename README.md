@@ -1,5 +1,9 @@
 # TuneForge
 
+[![Live demo](https://img.shields.io/badge/live%20demo-tuneforge.dexdevs.com-brightgreen?logo=rocket)](https://tuneforge.dexdevs.com)
+
+> **▶ Live demo: [tuneforge.dexdevs.com](https://tuneforge.dexdevs.com)** — run it in your browser, free offline backend. Browse all 10 portfolio demos via the *all demos* link.
+
 [![CI](https://github.com/ranafaraz/TuneForge/actions/workflows/ci.yml/badge.svg)](https://github.com/ranafaraz/TuneForge/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/python-3.10%E2%80%933.12-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
