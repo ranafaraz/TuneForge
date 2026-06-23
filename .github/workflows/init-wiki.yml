@@ -1,0 +1,31 @@
+name: Init Wiki
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  init-wiki:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up git config
+        run: |
+          git config --global user.name "Rana Faraz"
+          git config --global user.email "faraz.ahmed@iub.edu.pk"
+      - name: Create and push wiki
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir wiki && cd wiki
+          git init
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.wiki.git"
+          cat > Home.md << 'WEOF'
+# TuneForge
+
+See Architecture, Evaluation, Configuration, and Development pages.
+WEOF
+          git add .
+          git commit -m "docs: initialize wiki"
+          git push -u origin HEAD:master
