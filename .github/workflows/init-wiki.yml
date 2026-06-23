@@ -12,24 +12,15 @@ jobs:
           git config --global user.name 'Rana Faraz'
           git config --global user.email 'faraz.ahmed@iub.edu.pk'
           git config --global init.defaultBranch master
-      - name: Initialize wiki via gh
+      - name: Initialize wiki
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WIKI_TOKEN: ${{ secrets.WIKI_INIT_TOKEN }}
         run: |
-          # Use gh api to create initial wiki page
-          # GitHub REST API v3 wiki pages endpoint
-          gh api repos/ranafaraz/TuneForge/wiki/pages \
-            --method POST \
-            -f title='Home' \
-            -f content='# TuneForge Welcome to the TuneForge wiki.' \
-            -f message='docs: initialize wiki' \
-            --silent || echo "Wiki API returned error (expected if not initialized)"
-          
-          # Try git approach with GITHUB_TOKEN
           mkdir wiki && cd wiki
           git init
-          git remote add origin "https://oauth2:${GH_TOKEN}@github.com/ranafaraz/TuneForge.wiki.git"
-          echo '# TuneForge' > Home.md
+          git remote add origin "https://ranafaraz:${WIKI_TOKEN}@github.com/ranafaraz/TuneForge.wiki.git"
+          printf '# TuneForge\n\nWelcome to the TuneForge wiki.\n' > Home.md
           git add .
           git commit -m 'docs: initialize wiki'
-          git push origin master 2>&1 || echo "Push failed"
+          git push -u origin master
+          echo "Wiki initialized successfully"
